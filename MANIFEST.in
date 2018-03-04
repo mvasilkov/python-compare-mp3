@@ -1,0 +1,2 @@
+include compare_mp3/binary_dependencies/lame
+include compare_mp3/binary_dependencies/lame.exe
