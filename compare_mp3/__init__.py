@@ -85,7 +85,7 @@ def compare_cli(a: str, b: str) -> int:
     result = compare(a, b)
 
     if result == SAME_FILE:
-        print('This is literally the same file')
+        print('Literally the same file')
         return 0
 
     if result == SAME_BITSTREAM:
