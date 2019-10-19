@@ -1,3 +1,4 @@
+from enum import Enum
 import filecmp
 from functools import lru_cache
 from os import chmod
@@ -11,10 +12,13 @@ from tempfile import TemporaryDirectory
 
 from mutagen import id3
 
-DIFFERENT_MP3 = 0
-SAME_FILE = 1
-SAME_BITSTREAM = 2
-SAME_WAV = 3
+
+class Result(Enum):
+    DIFFERENT = 0
+    SAME_FILE = 1
+    SAME_BITSTREAM = 2
+    SAME_WAV = 3
+
 
 binary_dependencies = Path(__file__).parent / 'binary_dependencies'
 system = platform.system()
@@ -51,7 +55,7 @@ def test_requirements():
 
 def compare(a: str, b: str, check_tags: bool = True) -> int:
     if filecmp.cmp(a, b, False):
-        return SAME_FILE
+        return Result.SAME_FILE
 
     if check_tags:
         with TemporaryDirectory('compare-mp3') as tempdir:
@@ -64,7 +68,7 @@ def compare(a: str, b: str, check_tags: bool = True) -> int:
             id3.delete(name_b)
 
             if filecmp.cmp(name_a, name_b, False):
-                return SAME_BITSTREAM
+                return Result.SAME_BITSTREAM
 
     with TemporaryDirectory('.wav') as tempdir:
         name_a = tempdir + '/a.wav'
@@ -76,27 +80,27 @@ def compare(a: str, b: str, check_tags: bool = True) -> int:
         set_writable(name_b)
 
         if filecmp.cmp(name_a, name_b, False):
-            return SAME_WAV
+            return Result.SAME_WAV
 
-    return DIFFERENT_MP3
+    return Result.DIFFERENT
 
 
 def compare_cli(a: str, b: str) -> int:
     result = compare(a, b)
 
-    if result == SAME_FILE:
+    if result == Result.SAME_FILE:
         print('Literally the same file')
         return 0
 
-    if result == SAME_BITSTREAM:
+    if result == Result.SAME_BITSTREAM:
         print('Files have the same bitstream')
         return 0
 
-    if result == SAME_WAV:
+    if result == Result.SAME_WAV:
         print('Files contain the same audio (as decoded by LAME)')
         return 0
 
-    if result == DIFFERENT_MP3:
+    if result == Result.DIFFERENT:
         print('Completely different files')
         return 1
 
@@ -129,6 +133,7 @@ def run():
 
     if len(sys.argv) != 3:
         print(f'Usage: {sys.argv[0]} a.mp3 b.mp3')
+        sys.exit(-1)
     else:
         sys.exit(compare_cli(sys.argv[1], sys.argv[2]))
 

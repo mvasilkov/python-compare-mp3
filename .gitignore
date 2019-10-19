@@ -1,3 +1,4 @@
 .vscode/
 __pycache__/
 compare_mp3.egg-info/
+virtual/

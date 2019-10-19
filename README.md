@@ -29,7 +29,7 @@ if compare('a.mp3', 'b.mp3'):
 
 **Return values**
 
-- `compare_mp3.SAME_FILE` Literally the same file
-- `compare_mp3.SAME_BITSTREAM` Files have the same bitstream (but may have different metadata)
-- `compare_mp3.SAME_WAV` Files contain the same audio (as decoded by LAME)
-- `compare_mp3.DIFFERENT_MP3` Completely different files
+- `compare_mp3.Result.SAME_FILE` Literally the same file
+- `compare_mp3.Result.SAME_BITSTREAM` Files have the same bitstream (but may have different metadata)
+- `compare_mp3.Result.SAME_WAV` Files contain the same audio (as decoded by LAME)
+- `compare_mp3.Result.DIFFERENT` Completely different files
